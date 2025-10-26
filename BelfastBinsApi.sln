@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BelfastBinsApi", "backend\BelfastBinsApi.csproj", "{2155B38E-E33E-6678-7241-1800CA85F495}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2155B38E-E33E-6678-7241-1800CA85F495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2155B38E-E33E-6678-7241-1800CA85F495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2155B38E-E33E-6678-7241-1800CA85F495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2155B38E-E33E-6678-7241-1800CA85F495}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {073B5EB3-07CD-4D53-B6E3-3E5B267C083B}
+	EndGlobalSection
+EndGlobal
