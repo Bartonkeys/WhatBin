@@ -1,0 +1,6 @@
+@BelfastBinsApi_HostAddress = http://localhost:5278
+
+GET {{BelfastBinsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
