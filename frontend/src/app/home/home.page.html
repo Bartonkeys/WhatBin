@@ -1,0 +1,96 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      <ion-icon name="trash-outline"></ion-icon>
+      Belfast Bins
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Belfast Bins</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="location-outline"></ion-icon>
+          Your Address
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label position="stacked">Postcode *</ion-label>
+          <ion-input 
+            [(ngModel)]="postcode" 
+            placeholder="e.g. BT14 7GP"
+            type="text"
+            (keyup.enter)="lookupBins()">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">House Number (Optional)</ion-label>
+          <ion-input 
+            [(ngModel)]="houseNumber" 
+            placeholder="e.g. 420"
+            type="text"
+            (keyup.enter)="lookupBins()">
+          </ion-input>
+        </ion-item>
+
+        <div class="button-container">
+          <ion-button expand="block" (click)="lookupBins()" [disabled]="loading">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Find My Bins
+          </ion-button>
+          
+          <ion-button expand="block" fill="outline" (click)="clearData()" *ngIf="hasSearched">
+            <ion-icon name="refresh-outline" slot="start"></ion-icon>
+            Clear
+          </ion-button>
+        </div>
+
+        <div class="error-message" *ngIf="error">
+          {{ error }}
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div *ngIf="loading" class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Loading bin collection data...</p>
+    </div>
+
+    <ion-card *ngIf="binData && !loading" class="results-card">
+      <ion-card-header>
+        <ion-card-title>Your Bin Collections</ion-card-title>
+        <p class="address-text">{{ binData.address }}</p>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="next-collection">
+          <h2>Next Collection</h2>
+          <div class="bin-badge" [ngClass]="getColorClass(binData.next_collection_color)">
+            {{ binData.next_collection_color }} Bin
+          </div>
+        </div>
+
+        <ion-list>
+          <ion-item *ngFor="let collection of binData.collections" class="collection-item">
+            <div class="collection-info">
+              <div class="bin-color-indicator" [ngClass]="getColorClass(collection.color)"></div>
+              <div class="collection-details">
+                <h3>{{ collection.bin_type }}</h3>
+                <p class="collection-date">{{ collection.next_collection }}</p>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
