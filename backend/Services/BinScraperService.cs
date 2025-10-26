@@ -84,19 +84,53 @@ public class BinScraperService
             driver.Navigate().GoToUrl("https://online.belfastcity.gov.uk/find-bin-collection-day/Default.aspx");
 
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var js = (IJavaScriptExecutor)driver;
 
-            var postcodeRadio = wait.Until(d => d.FindElement(By.Id("searchBy_radio_1")));
-            postcodeRadio.Click();
-            await Task.Delay(1000);
+            wait.Until(d => js.ExecuteScript("return document.readyState")?.ToString() == "complete");
 
-            var postcodeInput = driver.FindElement(By.Id("Postcode_textbox"));
+            try
+            {
+                var cookieBtn = driver.FindElements(By.CssSelector("button[aria-label='Accept all cookies'], .cookie-accept, #onetrust-accept-btn-handler")).FirstOrDefault();
+                if (cookieBtn != null && cookieBtn.Displayed)
+                {
+                    cookieBtn.Click();
+                    await Task.Delay(500);
+                }
+            }
+            catch
+            {
+            }
+
+            var postcodeRadioLabel = wait.Until(d => d.FindElement(By.CssSelector("label[for='searchBy_radio_1']")));
+            js.ExecuteScript("arguments[0].scrollIntoView({block:'center', inline:'center'});", postcodeRadioLabel);
+
+            try
+            {
+                postcodeRadioLabel.Click();
+            }
+            catch (ElementClickInterceptedException)
+            {
+                js.ExecuteScript("arguments[0].click();", postcodeRadioLabel);
+            }
+
+            var postcodeInput = wait.Until(d =>
+            {
+                var el = d.FindElement(By.Id("Postcode_textbox"));
+                return (el.Displayed && el.Enabled) ? el : null;
+            });
+
             postcodeInput.Clear();
             postcodeInput.SendKeys(postcode);
 
             var findButton = driver.FindElement(By.Name("ctl00$MainContent$AddressLookup_button"));
             findButton.Click();
 
-            await Task.Delay(2000);
+            wait.Until(d =>
+            {
+                var pageSource = d.PageSource;
+                return pageSource.ToLower().Contains("not recognised") || 
+                       d.FindElements(By.Name("ctl00$MainContent$lstAddresses")).Any();
+            });
 
             var pageSource = driver.PageSource;
             if (pageSource.ToLower().Contains("not recognised"))
@@ -106,11 +140,20 @@ public class BinScraperService
 
             try
             {
-                var addressSelect = new SelectElement(driver.FindElement(By.Name("ctl00$MainContent$lstAddresses")));
+                var addressSelect = new SelectElement(wait.Until(d => d.FindElement(By.Name("ctl00$MainContent$lstAddresses"))));
                 var options = addressSelect.Options;
 
                 var validOptions = options.Where(opt => 
-                    opt.GetAttribute("value") != $"Select the {postcode} address from the list.").ToList();
+                {
+                    var optText = opt.Text ?? "";
+                    return !optText.ToLower().Contains("select the");
+                }).ToList();
+
+                _logger.LogInformation($"Found {validOptions.Count} valid address options");
+                foreach (var opt in validOptions.Take(3))
+                {
+                    _logger.LogInformation($"Option: {opt.Text} (value: {opt.GetAttribute("value")})");
+                }
 
                 if (!validOptions.Any())
                 {
@@ -130,58 +173,80 @@ public class BinScraperService
                     }
                 }
 
-                addressSelect.SelectByValue(selectedOption.GetAttribute("value"));
                 var addressText = selectedOption.Text;
+                _logger.LogInformation($"Selecting address: {addressText}");
+                
+                addressSelect.SelectByText(addressText);
+                
+                var verifySelection = addressSelect.SelectedOption.Text;
+                _logger.LogInformation($"Verified selection: {verifySelection}");
 
                 var selectButton = driver.FindElement(By.Name("ctl00$MainContent$SelectAddress_button"));
-                selectButton.Click();
+                js.ExecuteScript("arguments[0].scrollIntoView({block:'center', inline:'center'});", selectButton);
+                
+                try
+                {
+                    selectButton.Click();
+                }
+                catch (ElementClickInterceptedException)
+                {
+                    _logger.LogInformation("Normal click intercepted, using JS click");
+                    js.ExecuteScript("arguments[0].click();", selectButton);
+                }
 
-                await Task.Delay(3000);
+                wait.Until(d => 
+                {
+                    var resultsRows = d.FindElements(By.CssSelector("#ItemsGrid tr"));
+                    var errorMsg = d.FindElements(By.Id("lblMessage")).FirstOrDefault();
+                    return resultsRows.Count > 1 || (errorMsg != null && errorMsg.Displayed);
+                });
 
-                var htmlDoc = new HtmlDocument();
-                htmlDoc.LoadHtml(driver.PageSource);
+                var errorElement = driver.FindElements(By.Id("lblMessage")).FirstOrDefault();
+                if (errorElement != null && errorElement.Displayed && !string.IsNullOrWhiteSpace(errorElement.Text))
+                {
+                    _logger.LogWarning($"Error message displayed: {errorElement.Text}");
+                    throw new Exception($"Bin collection data not available: {errorElement.Text}");
+                }
 
                 var collections = new List<BinCollection>();
                 var nextCollectionColor = "Unknown";
 
-                var tables = htmlDoc.DocumentNode.SelectNodes("//table");
-                if (tables != null)
+                _logger.LogInformation("Parsing bin collection data using Selenium");
+                
+                var resultsTable = driver.FindElements(By.CssSelector("#ItemsGrid tr"));
+                _logger.LogInformation($"Found {resultsTable.Count} rows in ItemsGrid");
+                
+                for (int i = 1; i < resultsTable.Count; i++)
                 {
-                    foreach (var table in tables)
+                    var row = resultsTable[i];
+                    var cells = row.FindElements(By.TagName("td"));
+                    
+                    if (cells.Count >= 2)
                     {
-                        var rows = table.SelectNodes(".//tr");
-                        if (rows != null)
+                        var binType = cells[0].Text.Trim();
+                        var collectionDate = cells[1].Text.Trim();
+
+                        _logger.LogInformation($"Found bin: {binType} - {collectionDate}");
+
+                        var color = "Unknown";
+                        var binTypeLower = binType.ToLower();
+                        if (binTypeLower.Contains("black") || binTypeLower.Contains("general"))
+                            color = "Black";
+                        else if (binTypeLower.Contains("blue") || binTypeLower.Contains("recycling"))
+                            color = "Blue";
+                        else if (binTypeLower.Contains("brown") || binTypeLower.Contains("compost"))
+                            color = "Brown";
+                        else if (binTypeLower.Contains("green") || binTypeLower.Contains("food"))
+                            color = "Green";
+                        else if (binTypeLower.Contains("purple") || binTypeLower.Contains("glass"))
+                            color = "Purple";
+
+                        collections.Add(new BinCollection
                         {
-                            foreach (var row in rows)
-                            {
-                                var cells = row.SelectNodes(".//td");
-                                if (cells != null && cells.Count >= 2)
-                                {
-                                    var binType = cells[0].InnerText.Trim();
-                                    var collectionDate = cells[1].InnerText.Trim();
-
-                                    var color = "Unknown";
-                                    var binTypeLower = binType.ToLower();
-                                    if (binTypeLower.Contains("black") || binTypeLower.Contains("general"))
-                                        color = "Black";
-                                    else if (binTypeLower.Contains("blue") || binTypeLower.Contains("recycling"))
-                                        color = "Blue";
-                                    else if (binTypeLower.Contains("brown") || binTypeLower.Contains("compost"))
-                                        color = "Brown";
-                                    else if (binTypeLower.Contains("green") || binTypeLower.Contains("food"))
-                                        color = "Green";
-                                    else if (binTypeLower.Contains("purple") || binTypeLower.Contains("glass"))
-                                        color = "Purple";
-
-                                    collections.Add(new BinCollection
-                                    {
-                                        BinType = binType,
-                                        Color = color,
-                                        NextCollection = collectionDate
-                                    });
-                                }
-                            }
-                        }
+                            BinType = binType,
+                            Color = color,
+                            NextCollection = collectionDate
+                        });
                     }
                 }
 
