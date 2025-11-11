@@ -1,6 +1,6 @@
 # WhatBin - Belfast Bin Collection PWA
 
-A Progressive Web App (PWA) for checking bin collection days in Belfast. Built with Angular, Ionic, and FastAPI.
+A Progressive Web App (PWA) for checking bin collection days in Belfast. Built with Angular, Ionic, and ASP.NET Core.
 
 ## 🌐 Live Demo
 
@@ -28,10 +28,10 @@ A Progressive Web App (PWA) for checking bin collection days in Belfast. Built w
 - **PWA**: Web App Manifest for installability
 
 ### Backend (`/backend`)
-- **Framework**: FastAPI (Python)
-- **Web Scraping**: Selenium + BeautifulSoup4
+- **Framework**: ASP.NET Core 8.0 (C#)
+- **Web Scraping**: Selenium WebDriver + HtmlAgilityPack
 - **Browser Automation**: Chrome WebDriver
-- **Deployment**: Fly.io
+- **Deployment**: Cloud-ready (Azure, AWS, Docker)
 - **CORS**: Configured for cross-origin requests
 
 ## 📁 Project Structure
@@ -55,11 +55,14 @@ WhatBin/
 │   ├── ionic.config.json
 │   └── package.json
 │
-└── backend/                   # FastAPI backend
-    ├── app/
-    │   └── main.py           # FastAPI app with scraper
-    ├── pyproject.toml        # Poetry dependencies
-    └── poetry.lock
+└── backend/                   # ASP.NET Core backend
+    ├── Controllers/
+    │   └── BinLookupController.cs  # API endpoints
+    ├── Models/               # Data models
+    ├── Services/
+    │   └── BinScraperService.cs    # Web scraping logic
+    ├── Program.cs            # App configuration
+    └── BelfastBinsApi.csproj # Project file
 ```
 
 ## 🚀 Getting Started
@@ -72,8 +75,7 @@ WhatBin/
   - Ionic CLI: `npm install -g @ionic/cli`
 
 - **Backend**:
-  - Python 3.11+
-  - Poetry: `pip install poetry`
+  - .NET SDK 8.0+
   - Chrome/Chromium browser (for Selenium)
 
 ### Frontend Setup
@@ -104,17 +106,17 @@ ionic serve
 cd backend
 ```
 
-2. Install dependencies:
+2. Restore dependencies:
 ```bash
-poetry install
+dotnet restore
 ```
 
 3. Start the development server:
 ```bash
-poetry run fastapi dev app/main.py
+dotnet run
 ```
 
-4. The API will be available at `http://localhost:8000`
+4. The API will be available at `http://localhost:5000` (or `https://localhost:5001` for HTTPS)
 
 ## 🔧 Building for Production
 
@@ -130,11 +132,17 @@ The build artifacts will be in the `www/` directory.
 
 ### Backend
 
-The backend is deployed to Fly.io. To deploy:
+Build the backend:
 ```bash
-# From the backend directory
-fly deploy
+cd backend
+dotnet build
 ```
+
+The backend can be deployed to various platforms:
+- **Azure App Service**: `az webapp up`
+- **Docker**: Build and deploy using the included Dockerfile
+- **AWS**: Deploy using Elastic Beanstalk or ECS
+- **Self-hosted**: Run with `dotnet run` or as a Windows Service
 
 ## 📡 API Documentation
 
@@ -204,12 +212,17 @@ Main application page:
 
 ### Backend
 
-#### Main API (`backend/app/main.py`)
-FastAPI application with:
-- `scrape_bin_data()`: Scrapes Belfast City Council website using Selenium
-- `get_mock_bin_data()`: Fallback mock data for development
-- `/api/bin-lookup`: POST endpoint for bin collection lookup
-- CORS middleware for cross-origin requests
+#### BinScraperService (`backend/Services/BinScraperService.cs`)
+Web scraping service with:
+- `ScrapeBinData()`: Scrapes Belfast City Council website using Selenium
+- `GetMockBinData()`: Fallback mock data for development
+- `SetupDriver()`: Configures Chrome WebDriver with headless options
+
+#### BinLookupController (`backend/Controllers/BinLookupController.cs`)
+API controller with:
+- `GET /api/healthz`: Health check endpoint
+- `POST /api/bin-lookup`: Bin collection lookup endpoint
+- CORS configured for cross-origin requests
 
 ## 💾 Data Storage
 
@@ -276,10 +289,12 @@ The frontend is deployed as a static PWA:
 3. Current deployment: https://belfast-bin-collection-app-udfrk8i6.devinapps.com
 
 ### Backend Deployment
-The backend is deployed to Fly.io:
-1. Ensure all dependencies are in `pyproject.toml`
-2. Deploy: `fly deploy`
-3. Current deployment: https://app-isvwccpu.fly.dev/
+The backend can be deployed to various platforms:
+1. **Azure App Service**: Use `az webapp up` or deploy from Visual Studio
+2. **Docker**: Build and deploy using containerization
+3. **AWS**: Deploy using Elastic Beanstalk or ECS
+4. **Self-hosted**: Run with `dotnet run` or as a Windows Service
+5. Previous deployment: https://app-isvwccpu.fly.dev/ (FastAPI version)
 
 ## 🧪 Testing
 
@@ -292,7 +307,7 @@ npm test
 ### Backend Testing
 Test the API endpoint:
 ```bash
-curl -X POST http://localhost:8000/api/bin-lookup \
+curl -X POST http://localhost:5000/api/bin-lookup \
   -H "Content-Type: application/json" \
   -d '{"postcode": "BT14 7GP"}'
 ```
@@ -300,9 +315,10 @@ curl -X POST http://localhost:8000/api/bin-lookup \
 ## 📝 Development Notes
 
 ### Backend Scraping
-- The backend uses Selenium to scrape the Belfast City Council website
+- The backend uses Selenium WebDriver with Chrome in headless mode
+- HtmlAgilityPack is used for HTML parsing
 - Chrome WebDriver is required for production scraping
-- Mock data is used as fallback when Chrome is unavailable
+- Mock data is used as fallback when Chrome is unavailable or scraping fails
 - The scraper handles ASP.NET form submissions and viewstate
 
 ### PWA Features
@@ -328,7 +344,7 @@ This project is for demonstration purposes.
 - Belfast City Council for bin collection data
 - Ionic Framework for mobile UI components
 - Angular team for the framework
-- FastAPI for the backend framework
+- ASP.NET Core team for the backend framework
 
 ## 📞 Support
 
