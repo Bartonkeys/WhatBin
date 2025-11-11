@@ -3,16 +3,121 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using HtmlAgilityPack;
 using BelfastBinsApi.Models;
+using BelfastBinsApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BelfastBinsApi.Services;
 
 public class BinScraperService
 {
     private readonly ILogger<BinScraperService> _logger;
+    private readonly BinDbContext _dbContext;
 
-    public BinScraperService(ILogger<BinScraperService> logger)
+    private static readonly DateTime WeekBAnchor = new DateTime(2025, 11, 10);
+    private static readonly DateTime WeekAAnchor = new DateTime(2025, 11, 17);
+
+    public BinScraperService(ILogger<BinScraperService> logger, BinDbContext dbContext)
     {
         _logger = logger;
+        _dbContext = dbContext;
+    }
+
+    private string GetCurrentWeekCycle()
+    {
+        var today = DateTime.Now.Date;
+        
+        var daysSinceWeekB = (today - WeekBAnchor).Days;
+        var weekNumber = daysSinceWeekB / 7;
+        
+        return weekNumber % 2 == 0 ? "A" : "B";
+    }
+
+    private DateTime GetNextCollectionDate(string dayOfWeek, string weekCycle)
+    {
+        var today = DateTime.Now.Date;
+        var currentWeekCycle = GetCurrentWeekCycle();
+        
+        var targetDayOfWeek = dayOfWeek switch
+        {
+            "Mon" => DayOfWeek.Monday,
+            "Tue" => DayOfWeek.Tuesday,
+            "Wed" => DayOfWeek.Wednesday,
+            "Thu" => DayOfWeek.Thursday,
+            "Fri" => DayOfWeek.Friday,
+            "Sat" => DayOfWeek.Saturday,
+            "Sun" => DayOfWeek.Sunday,
+            _ => DayOfWeek.Monday
+        };
+        
+        var daysUntilTarget = ((int)targetDayOfWeek - (int)today.DayOfWeek + 7) % 7;
+        if (daysUntilTarget == 0) daysUntilTarget = 7;
+        
+        var nextDate = today.AddDays(daysUntilTarget);
+        
+        var nextDateWeekCycle = GetCurrentWeekCycle();
+        var daysSinceWeekB = (nextDate - WeekBAnchor).Days;
+        var weekNumber = daysSinceWeekB / 7;
+        nextDateWeekCycle = weekNumber % 2 == 0 ? "A" : "B";
+        
+        if (nextDateWeekCycle != weekCycle)
+        {
+            nextDate = nextDate.AddDays(7);
+        }
+        
+        return nextDate;
+    }
+
+    public async Task<BinLookupResponse?> LookupFromDatabase(string postcode, string? houseNumber = null)
+    {
+        try
+        {
+            var postcodeNormalized = postcode.Replace(" ", "").ToUpper();
+            
+            _logger.LogInformation($"Looking up postcode: {postcodeNormalized}, house: {houseNumber}");
+            
+            var query = _dbContext.BinSchedules
+                .Where(s => s.PostcodeNormalized == postcodeNormalized);
+            
+            if (!string.IsNullOrEmpty(houseNumber))
+            {
+                var houseNumberNormalized = houseNumber.Trim().ToUpper();
+                query = query.Where(s => s.HouseNumber == houseNumberNormalized || 
+                                        (s.HouseNumber + s.HouseSuffix) == houseNumberNormalized);
+            }
+            
+            var schedules = await query.ToListAsync();
+            
+            if (!schedules.Any())
+            {
+                _logger.LogInformation($"No schedules found in database for {postcodeNormalized} {houseNumber}");
+                return null;
+            }
+            
+            var schedule = schedules.First();
+            var nextCollectionDate = GetNextCollectionDate(schedule.DayOfWeek, schedule.WeekCycle);
+            
+            var collections = new List<BinCollection>
+            {
+                new BinCollection
+                {
+                    BinType = "General Waste (Black Bin)",
+                    Color = "Black",
+                    NextCollection = nextCollectionDate.ToString("dddd, dd MMMM yyyy")
+                }
+            };
+            
+            return new BinLookupResponse
+            {
+                Address = schedule.FullAddress,
+                Collections = collections,
+                NextCollectionColor = "Black"
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error looking up from database");
+            return null;
+        }
     }
 
     public BinLookupResponse GetMockBinData(string postcode, string? houseNumber = null)
