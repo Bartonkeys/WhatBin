@@ -22,20 +22,17 @@ public class BinScraperService
         _dbContext = dbContext;
     }
 
-    private string GetCurrentWeekCycle()
+    private string GetWeekCycle(DateTime date)
     {
-        var today = DateTime.Now.Date;
-        
-        var daysSinceWeekB = (today - WeekBAnchor).Days;
+        var daysSinceWeekB = (date - WeekBAnchor).Days;
         var weekNumber = daysSinceWeekB / 7;
         
-        return weekNumber % 2 == 0 ? "A" : "B";
+        return weekNumber % 2 == 0 ? "B" : "A";
     }
 
     private DateTime GetNextCollectionDate(string dayOfWeek, string weekCycle)
     {
         var today = DateTime.Now.Date;
-        var currentWeekCycle = GetCurrentWeekCycle();
         
         var targetDayOfWeek = dayOfWeek switch
         {
@@ -54,10 +51,7 @@ public class BinScraperService
         
         var nextDate = today.AddDays(daysUntilTarget);
         
-        var nextDateWeekCycle = GetCurrentWeekCycle();
-        var daysSinceWeekB = (nextDate - WeekBAnchor).Days;
-        var weekNumber = daysSinceWeekB / 7;
-        nextDateWeekCycle = weekNumber % 2 == 0 ? "A" : "B";
+        var nextDateWeekCycle = GetWeekCycle(nextDate);
         
         if (nextDateWeekCycle != weekCycle)
         {
