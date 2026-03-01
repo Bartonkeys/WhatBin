@@ -33,6 +33,17 @@ public class BinLookupController : ControllerBase
                 return BadRequest(new { detail = "Postcode is required" });
             }
 
+            _logger.LogInformation($"Bin lookup request: {request.Postcode} {request.HouseNumber}");
+
+            var dbResult = await _scraperService.LookupFromDatabase(request.Postcode, request.HouseNumber);
+            if (dbResult != null)
+            {
+                _logger.LogInformation("Found in database, returning result");
+                return Ok(dbResult);
+            }
+
+            _logger.LogInformation("Not found in database, falling back to web scraping");
+
             try
             {
                 var result = await _scraperService.ScrapeBinData(request.Postcode, request.HouseNumber);
