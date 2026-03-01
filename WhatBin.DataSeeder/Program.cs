@@ -106,6 +106,13 @@ foreach (var pdfFile in pdfFiles)
     catch (Exception ex)
     {
         Console.Error.WriteLine($"  Error processing {fileName}: {ex.Message}");
+
+        // Clear any tracked entities from the failed batch to prevent them
+        // from being re-attempted when processing subsequent files
+        foreach (var entry in context.ChangeTracker.Entries().ToList())
+        {
+            entry.State = EntityState.Detached;
+        }
     }
 }
 
