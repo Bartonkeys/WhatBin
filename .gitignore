@@ -104,6 +104,9 @@ ServiceFabricBackup/
 *.ldf
 *.ndf
 
+# SQLite database files
+*.db
+
 # Microsoft Fakes
 FakesAssemblies/
 

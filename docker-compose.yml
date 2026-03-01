@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: whatbin-postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-whatbin}
+      POSTGRES_USER: ${POSTGRES_USER:-whatbin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - whatbin-pgdata:/var/lib/postgresql/data
+
+volumes:
+  whatbin-pgdata:
