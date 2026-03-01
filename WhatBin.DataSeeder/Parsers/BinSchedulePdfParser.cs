@@ -166,12 +166,13 @@ public static class BinSchedulePdfParser
         // The street is the second part
         var street = addressParts.Length > 1 ? addressParts[1].Trim() : "";
 
-        // City and county
+        // City is always the third part
         var city = addressParts.Length > 2 ? addressParts[2].Trim() : "";
-        var county = addressParts.Length > 3 ? addressParts[3].Trim() : "";
 
-        // Postcode is the last part
-        var postcode = addressParts.Length > 4 ? addressParts[^1].Trim() : "";
+        // For 5+ parts: house, street, city, county, postcode
+        // For 4 parts: house, street, city, postcode (no county)
+        var county = addressParts.Length > 4 ? addressParts[3].Trim() : "";
+        var postcode = addressParts.Length > 3 ? addressParts[^1].Trim() : "";
 
         // Normalize
         var postcodeNormalized = postcode.Replace(" ", "").ToUpper();
