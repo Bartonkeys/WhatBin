@@ -284,6 +284,8 @@ public static class JobCodeNormalizer
         var day = NormalizeDay(match.Groups[2].Value);
         var weekCycle = NormalizeWeekCycle(match.Groups[3].Value);
 
+        if (string.IsNullOrEmpty(day)) return null;
+
         return new NormalizedJobCode(route, "", day, weekCycle);
     }
 
