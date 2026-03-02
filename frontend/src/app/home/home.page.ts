@@ -4,23 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, 
   IonToolbar, 
-  IonTitle, 
   IonContent, 
-  IonCard, 
-  IonCardHeader, 
-  IonCardTitle, 
-  IonCardContent,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonButton,
   IonSpinner,
-  IonIcon,
-  IonList
+  IonIcon
 } from '@ionic/angular/standalone';
 import { BinService, BinLookupResponse, UserAddress } from '../services/bin.service';
 import { addIcons } from 'ionicons';
-import { trashOutline, locationOutline, refreshOutline } from 'ionicons/icons';
+import { trashOutline, locationOutline, refreshOutline, searchOutline, calendarOutline, alertCircleOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -31,19 +21,9 @@ import { trashOutline, locationOutline, refreshOutline } from 'ionicons/icons';
     FormsModule,
     IonHeader, 
     IonToolbar, 
-    IonTitle, 
     IonContent,
-    IonCard,
-    IonCardHeader,
-    IonCardTitle,
-    IonCardContent,
-    IonItem,
-    IonLabel,
-    IonInput,
-    IonButton,
     IonSpinner,
-    IonIcon,
-    IonList
+    IonIcon
   ],
 })
 export class HomePage implements OnInit {
@@ -55,7 +35,7 @@ export class HomePage implements OnInit {
   hasSearched: boolean = false;
 
   constructor(private binService: BinService) {
-    addIcons({ trashOutline, locationOutline, refreshOutline });
+    addIcons({ trashOutline, locationOutline, refreshOutline, searchOutline, calendarOutline, alertCircleOutline });
   }
 
   ngOnInit() {

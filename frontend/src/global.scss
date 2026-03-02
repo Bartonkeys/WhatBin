@@ -34,4 +34,19 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* Disable dark mode to match Belfast City Council's light theme */
+/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+// Belfast City Council inspired global styles
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #0a0a0a;
+  background: #fefefe;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Remove default Ionic card shadows and borders for a cleaner look
+ion-content {
+  --background: #fefefe;
+}

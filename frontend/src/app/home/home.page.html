@@ -1,96 +1,109 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title>
-      <ion-icon name="trash-outline"></ion-icon>
-      Belfast Bins
-    </ion-title>
+  <ion-toolbar>
+    <div class="bcc-header">
+      <div class="bcc-header-inner">
+        <div class="bcc-logo">
+          <ion-icon name="trash-outline" class="logo-icon"></ion-icon>
+          <span class="logo-text">WhatBin</span>
+        </div>
+        <span class="bcc-tagline">Belfast Bin Collections</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Belfast Bins</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Hero section with search -->
+  <div class="bcc-hero">
+    <div class="hero-overlay">
+      <h1 class="hero-title">Find your bin collection day</h1>
+      <p class="hero-subtitle">Enter your postcode to check when your bins are collected</p>
 
-  <div class="container">
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>
-          <ion-icon name="location-outline"></ion-icon>
-          Your Address
-        </ion-card-title>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-item>
-          <ion-label position="stacked">Postcode *</ion-label>
-          <ion-input 
-            [(ngModel)]="postcode" 
-            placeholder="e.g. BT14 7GP"
-            type="text"
-            (keyup.enter)="lookupBins()">
-          </ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="stacked">House Number (Optional)</ion-label>
-          <ion-input 
-            [(ngModel)]="houseNumber" 
-            placeholder="e.g. 420"
-            type="text"
-            (keyup.enter)="lookupBins()">
-          </ion-input>
-        </ion-item>
-
-        <div class="button-container">
-          <ion-button expand="block" (click)="lookupBins()" [disabled]="loading">
-            <ion-icon name="trash-outline" slot="start"></ion-icon>
-            Find My Bins
-          </ion-button>
-          
-          <ion-button expand="block" fill="outline" (click)="clearData()" *ngIf="hasSearched">
-            <ion-icon name="refresh-outline" slot="start"></ion-icon>
-            Clear
-          </ion-button>
+      <div class="search-container">
+        <div class="search-box">
+          <div class="search-fields">
+            <div class="search-field">
+              <label class="search-label">Postcode</label>
+              <input
+                class="search-input"
+                [(ngModel)]="postcode"
+                placeholder="e.g. BT14 7GP"
+                type="text"
+                (keyup.enter)="lookupBins()" />
+            </div>
+            <div class="search-field">
+              <label class="search-label">House Number <span class="optional">(Optional)</span></label>
+              <input
+                class="search-input"
+                [(ngModel)]="houseNumber"
+                placeholder="e.g. 42"
+                type="text"
+                (keyup.enter)="lookupBins()" />
+            </div>
+          </div>
+          <button class="search-btn" (click)="lookupBins()" [disabled]="loading">
+            <ion-icon name="search-outline"></ion-icon>
+          </button>
         </div>
+        <button class="clear-btn" (click)="clearData()" *ngIf="hasSearched">
+          <ion-icon name="refresh-outline"></ion-icon>
+          New search
+        </button>
+      </div>
 
-        <div class="error-message" *ngIf="error">
-          {{ error }}
-        </div>
-      </ion-card-content>
-    </ion-card>
-
-    <div *ngIf="loading" class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Loading bin collection data...</p>
+      <div class="error-message" *ngIf="error">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        {{ error }}
+      </div>
     </div>
+  </div>
 
-    <ion-card *ngIf="binData && !loading" class="results-card">
-      <ion-card-header>
-        <ion-card-title>Your Bin Collections</ion-card-title>
-        <p class="address-text">{{ binData.address }}</p>
-      </ion-card-header>
-      <ion-card-content>
-        <div class="next-collection">
-          <h2>Next Collection</h2>
-          <div class="bin-badge" [ngClass]="getColorClass(binData.nextCollectionColor)">
-            {{ binData.nextCollectionColor }} Bin
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Looking up your bin collections...</p>
+  </div>
+
+  <!-- Results section -->
+  <div *ngIf="binData && !loading" class="results-section">
+    <div class="results-container">
+      <!-- Address header -->
+      <div class="results-header">
+        <ion-icon name="location-outline"></ion-icon>
+        <div>
+          <h2>Your Bin Collections</h2>
+          <p class="address-text">{{ binData.address }}</p>
+        </div>
+      </div>
+
+      <!-- Next collection highlight card -->
+      <div class="next-collection-card" [ngClass]="getColorClass(binData.nextCollectionColor)">
+        <div class="next-collection-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <div class="next-collection-info">
+          <span class="next-label">Next collection</span>
+          <span class="next-bin-type">{{ binData.nextCollectionColor }} Bin</span>
+        </div>
+      </div>
+
+      <!-- All collections grid -->
+      <div class="collections-grid">
+        <div *ngFor="let collection of binData.collections"
+             class="collection-card"
+             [ngClass]="getColorClass(collection.color) + '-border'">
+          <div class="collection-card-indicator" [ngClass]="getColorClass(collection.color)"></div>
+          <div class="collection-card-body">
+            <h3 class="collection-bin-type">{{ collection.binType }}</h3>
+            <p class="collection-date">{{ collection.nextCollection }}</p>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <ion-list>
-          <ion-item *ngFor="let collection of binData.collections" class="collection-item">
-            <div class="collection-info">
-              <div class="bin-color-indicator" [ngClass]="getColorClass(collection.color)"></div>
-              <div class="collection-details">
-                <h3>{{ collection.binType }}</h3>
-                <p class="collection-date">{{ collection.nextCollection }}</p>
-              </div>
-            </div>
-          </ion-item>
-        </ion-list>
-      </ion-card-content>
-    </ion-card>
+  <!-- Footer -->
+  <div class="bcc-footer">
+    <p>Data sourced from Belfast City Council bin collection schedules</p>
   </div>
 </ion-content>
