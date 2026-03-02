@@ -58,7 +58,7 @@ public static class JobCodeNormalizer
 
     // Regex for route-number-day-week with bin type embedded: "R3-188-Blue-Wed-WkB"
     private static readonly Regex RouteNumBinDayWeekRegex = new(
-        @"^([A-Z]+\d+)-(\d+)-(Black|Blue|Brown|Green|Blk)-(\w+)-(Wk[AB]|[AB])$",
+        @"^([A-Z]+\d+)-(\d+)-(Black|Blue|Brown|Green|Blk|Glass)-(\w+)-(Wk[AB]|[AB])$",
         RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     // Regex for route-day-week without number: "R14-Mon-WkB" or "R15- Tue-WkB"
