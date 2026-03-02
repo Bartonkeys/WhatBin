@@ -47,7 +47,7 @@ public class BinScraperService
                 return null;
             }
             
-            var collections = new List<BinCollection>();
+            var collectionEntries = new List<(BinCollection Collection, DateTime Date)>();
             string? address = null;
 
             // Group by bin type to avoid duplicates and get one schedule per bin type
@@ -64,23 +64,26 @@ public class BinScraperService
                 var nextDate = _scheduleService.GetNextCollectionDate(schedule.BinType, schedule.WeekCycle, schedule.DayOfWeek);
                 if (nextDate == null) continue;
 
-                collections.Add(new BinCollection
-                {
-                    BinType = CollectionScheduleService.GetBinDisplayName(schedule.BinType),
-                    Color = schedule.BinType,
-                    NextCollection = nextDate.Value.ToString("dddd, dd MMMM yyyy")
-                });
+                collectionEntries.Add((
+                    new BinCollection
+                    {
+                        BinType = CollectionScheduleService.GetBinDisplayName(schedule.BinType),
+                        Color = schedule.BinType,
+                        NextCollection = nextDate.Value.ToString("dddd, dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                    },
+                    nextDate.Value));
             }
 
-            if (!collections.Any())
+            if (!collectionEntries.Any())
             {
                 _logger.LogInformation("No valid collections computed for {Postcode} {HouseNumber}", postcodeNormalized, houseNumber);
                 return null;
             }
 
             // Sort by next collection date so the soonest is first
-            collections = collections
-                .OrderBy(c => DateTime.ParseExact(c.NextCollection, "dddd, dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture))
+            var collections = collectionEntries
+                .OrderBy(e => e.Date)
+                .Select(e => e.Collection)
                 .ToList();
             
             return new BinLookupResponse
