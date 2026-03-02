@@ -74,8 +74,8 @@
       <ion-card-content>
         <div class="next-collection">
           <h2>Next Collection</h2>
-          <div class="bin-badge" [ngClass]="getColorClass(binData.next_collection_color)">
-            {{ binData.next_collection_color }} Bin
+          <div class="bin-badge" [ngClass]="getColorClass(binData.nextCollectionColor)">
+            {{ binData.nextCollectionColor }} Bin
           </div>
         </div>
 
@@ -84,8 +84,8 @@
             <div class="collection-info">
               <div class="bin-color-indicator" [ngClass]="getColorClass(collection.color)"></div>
               <div class="collection-details">
-                <h3>{{ collection.bin_type }}</h3>
-                <p class="collection-date">{{ collection.next_collection }}</p>
+                <h3>{{ collection.binType }}</h3>
+                <p class="collection-date">{{ collection.nextCollection }}</p>
               </div>
             </div>
           </ion-item>
