@@ -42,7 +42,7 @@ public class CollectionScheduleService
         _logger = logger;
 
         var section = configuration.GetSection("CollectionSchedule");
-        _anchorDate = DateTime.Parse(section["AnchorDate"] ?? "2026-03-02").Date;
+        _anchorDate = DateTime.Parse(section["AnchorDate"] ?? "2026-03-02", System.Globalization.CultureInfo.InvariantCulture).Date;
         _anchorWeekType = int.Parse(section["AnchorWeekType"] ?? "1");
 
         _logger.LogInformation("Collection schedule anchor: {AnchorDate} = Week Type {WeekType}", _anchorDate, _anchorWeekType);
@@ -53,11 +53,9 @@ public class CollectionScheduleService
     /// </summary>
     public int GetWeekType(DateTime date)
     {
-        var daysSinceAnchor = (date.Date - _anchorDate).Days;
-
-        // Get the Monday of both weeks to compare week numbers
-        var anchorMonday = _anchorDate.AddDays(-(int)_anchorDate.DayOfWeek + (int)DayOfWeek.Monday);
-        var dateMonday = date.Date.AddDays(-(int)date.DayOfWeek + (int)DayOfWeek.Monday);
+        // Align both dates to their ISO Monday to get consistent week boundaries
+        var anchorMonday = _anchorDate.AddDays(-(((int)_anchorDate.DayOfWeek + 6) % 7));
+        var dateMonday = date.Date.AddDays(-(((int)date.DayOfWeek + 6) % 7));
 
         var weeksDiff = (dateMonday - anchorMonday).Days / 7;
 
