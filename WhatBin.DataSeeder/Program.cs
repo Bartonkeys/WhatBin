@@ -58,7 +58,36 @@ static async Task<int> ImportPdfsToStaging(string[] args, BinDbContext context)
 
     Console.WriteLine($"Found {pdfFiles.Length} PDF file(s) in {pdfFolder}");
 
-    var totalRecords = 0;
+var optionsBuilder = new DbContextOptionsBuilder<BinDbContext>();
+optionsBuilder.UseNpgsql(connectionString);
+
+using var context = new BinDbContext(optionsBuilder.Options);
+
+// Ensure database and tables exist
+Console.WriteLine("Ensuring database schema exists...");
+await context.Database.EnsureCreatedAsync();
+
+// Clear existing staging data
+Console.WriteLine("Clearing existing bin stagingschedule data...");
+var stagingCount = await context.StagingBinSchedules.CountAsync();
+if (stagingCount > 0)
+{
+    Console.WriteLine($"  Removing {stagingCount:N0} existing records...");
+    context.StagingBinSchedules.RemoveRange(context.StagingBinSchedules);
+    await context.SaveChangesAsync();
+}
+
+// Clear existing data
+Console.WriteLine("Clearing existing bin schedule data...");
+var existingCount = await context.BinSchedules.CountAsync();
+if (existingCount > 0)
+{
+    Console.WriteLine($"  Removing {existingCount:N0} existing records...");
+    context.BinSchedules.RemoveRange(context.BinSchedules);
+    await context.SaveChangesAsync();
+}
+
+var totalRecords = 0;
 
     foreach (var pdfFile in pdfFiles)
     {
