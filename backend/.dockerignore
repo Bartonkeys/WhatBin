@@ -1,0 +1,40 @@
+# Build results
+bin/
+obj/
+out/
+publish/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio
+.vs/
+.vscode/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+
+# Environment files
+appsettings.Development.json
+*.env
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+README.md
+*.md
+
+# Migrations (optional - uncomment if you don't want to include them)
+# Migrations/
+
+# Testing
+*.Tests/
+*Test.cs
