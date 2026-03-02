@@ -12,53 +12,13 @@ public class BinScraperService
 {
     private readonly ILogger<BinScraperService> _logger;
     private readonly BinDbContext _dbContext;
+    private readonly CollectionScheduleService _scheduleService;
 
-    private static readonly DateTime WeekBAnchor = new DateTime(2025, 11, 10);
-    private static readonly DateTime WeekAAnchor = new DateTime(2025, 11, 17);
-
-    public BinScraperService(ILogger<BinScraperService> logger, BinDbContext dbContext)
+    public BinScraperService(ILogger<BinScraperService> logger, BinDbContext dbContext, CollectionScheduleService scheduleService)
     {
         _logger = logger;
         _dbContext = dbContext;
-    }
-
-    private string GetWeekCycle(DateTime date)
-    {
-        var daysSinceWeekB = (date - WeekBAnchor).Days;
-        var weekNumber = daysSinceWeekB / 7;
-        
-        return weekNumber % 2 == 0 ? "B" : "A";
-    }
-
-    private DateTime GetNextCollectionDate(string dayOfWeek, string weekCycle)
-    {
-        var today = DateTime.Now.Date;
-        
-        var targetDayOfWeek = dayOfWeek switch
-        {
-            "Mon" => DayOfWeek.Monday,
-            "Tue" => DayOfWeek.Tuesday,
-            "Wed" => DayOfWeek.Wednesday,
-            "Thu" => DayOfWeek.Thursday,
-            "Fri" => DayOfWeek.Friday,
-            "Sat" => DayOfWeek.Saturday,
-            "Sun" => DayOfWeek.Sunday,
-            _ => DayOfWeek.Monday
-        };
-        
-        var daysUntilTarget = ((int)targetDayOfWeek - (int)today.DayOfWeek + 7) % 7;
-        if (daysUntilTarget == 0) daysUntilTarget = 7;
-        
-        var nextDate = today.AddDays(daysUntilTarget);
-        
-        var nextDateWeekCycle = GetWeekCycle(nextDate);
-        
-        if (nextDateWeekCycle != weekCycle)
-        {
-            nextDate = nextDate.AddDays(7);
-        }
-        
-        return nextDate;
+        _scheduleService = scheduleService;
     }
 
     public async Task<BinLookupResponse?> LookupFromDatabase(string postcode, string? houseNumber = null)
@@ -67,7 +27,7 @@ public class BinScraperService
         {
             var postcodeNormalized = postcode.Replace(" ", "").ToUpper();
             
-            _logger.LogInformation($"Looking up postcode: {postcodeNormalized}, house: {houseNumber}");
+            _logger.LogInformation("Looking up postcode: {Postcode}, house: {HouseNumber}", postcodeNormalized, houseNumber);
             
             var query = _dbContext.BinSchedules
                 .Where(s => s.PostcodeNormalized == postcodeNormalized);
@@ -83,28 +43,54 @@ public class BinScraperService
             
             if (!schedules.Any())
             {
-                _logger.LogInformation($"No schedules found in database for {postcodeNormalized} {houseNumber}");
+                _logger.LogInformation("No schedules found in database for {Postcode} {HouseNumber}", postcodeNormalized, houseNumber);
                 return null;
             }
             
-            var schedule = schedules.First();
-            var nextCollectionDate = GetNextCollectionDate(schedule.DayOfWeek, schedule.WeekCycle);
-            
-            var collections = new List<BinCollection>
+            var collectionEntries = new List<(BinCollection Collection, DateTime Date)>();
+            string? address = null;
+
+            // Group by bin type to avoid duplicates and get one schedule per bin type
+            var byBinType = schedules
+                .Where(s => !string.IsNullOrEmpty(s.BinType) && !string.IsNullOrEmpty(s.WeekCycle))
+                .GroupBy(s => s.BinType, StringComparer.OrdinalIgnoreCase)
+                .OrderBy(g => g.Key, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var group in byBinType)
             {
-                new BinCollection
-                {
-                    BinType = "General Waste (Black Bin)",
-                    Color = "Black",
-                    NextCollection = nextCollectionDate.ToString("dddd, dd MMMM yyyy")
-                }
-            };
+                var schedule = group.First();
+                address ??= schedule.FullAddress;
+
+                var nextDate = _scheduleService.GetNextCollectionDate(schedule.BinType, schedule.WeekCycle, schedule.DayOfWeek);
+                if (nextDate == null) continue;
+
+                collectionEntries.Add((
+                    new BinCollection
+                    {
+                        BinType = CollectionScheduleService.GetBinDisplayName(schedule.BinType),
+                        Color = schedule.BinType,
+                        NextCollection = nextDate.Value.ToString("dddd, dd MMMM yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                    },
+                    nextDate.Value));
+            }
+
+            if (!collectionEntries.Any())
+            {
+                _logger.LogInformation("No valid collections computed for {Postcode} {HouseNumber}", postcodeNormalized, houseNumber);
+                return null;
+            }
+
+            // Sort by next collection date so the soonest is first
+            var collections = collectionEntries
+                .OrderBy(e => e.Date)
+                .Select(e => e.Collection)
+                .ToList();
             
             return new BinLookupResponse
             {
-                Address = schedule.FullAddress,
+                Address = address ?? schedules.First().FullAddress,
                 Collections = collections,
-                NextCollectionColor = "Black"
+                NextCollectionColor = collections.First().Color
             };
         }
         catch (Exception ex)
