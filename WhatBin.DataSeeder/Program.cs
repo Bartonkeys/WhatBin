@@ -45,6 +45,16 @@ using var context = new BinDbContext(optionsBuilder.Options);
 Console.WriteLine("Ensuring database schema exists...");
 await context.Database.EnsureCreatedAsync();
 
+// Clear existing staging data
+Console.WriteLine("Clearing existing bin stagingschedule data...");
+var stagingCount = await context.StagingBinSchedules.CountAsync();
+if (stagingCount > 0)
+{
+    Console.WriteLine($"  Removing {stagingCount:N0} existing records...");
+    context.StagingBinSchedules.RemoveRange(context.StagingBinSchedules);
+    await context.SaveChangesAsync();
+}
+
 // Clear existing data
 Console.WriteLine("Clearing existing bin schedule data...");
 var existingCount = await context.BinSchedules.CountAsync();
