@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BinDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSingleton<CollectionScheduleService>();
 builder.Services.AddScoped<BinScraperService>();
 
 builder.Services.AddCors(options =>
