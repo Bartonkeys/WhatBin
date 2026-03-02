@@ -58,14 +58,6 @@ static async Task<int> ImportPdfsToStaging(string[] args, BinDbContext context)
 
     Console.WriteLine($"Found {pdfFiles.Length} PDF file(s) in {pdfFolder}");
 
-var optionsBuilder = new DbContextOptionsBuilder<BinDbContext>();
-optionsBuilder.UseNpgsql(connectionString);
-
-using var context = new BinDbContext(optionsBuilder.Options);
-
-// Ensure database and tables exist
-Console.WriteLine("Ensuring database schema exists...");
-await context.Database.EnsureCreatedAsync();
 
 // Clear existing staging data
 Console.WriteLine("Clearing existing bin stagingschedule data...");
