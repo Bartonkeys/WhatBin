@@ -216,6 +216,8 @@ public static class JobCodeNormalizer
         var day = NormalizeDay(match.Groups[4].Value);
         var weekCycle = NormalizeWeekCycle(match.Groups[5].Value);
 
+        if (string.IsNullOrEmpty(day)) return null;
+
         return new NormalizedJobCode(route, binType, day, weekCycle);
     }
 
@@ -228,6 +230,8 @@ public static class JobCodeNormalizer
         // Groups[2] is the numeric ID
         var day = NormalizeDay(match.Groups[3].Value);
         var weekCycle = NormalizeWeekCycle(match.Groups[4].Value);
+
+        if (string.IsNullOrEmpty(day)) return null;
 
         // Bin type unknown from job code alone - will come from service column
         return new NormalizedJobCode(route, "", day, weekCycle);
@@ -242,6 +246,8 @@ public static class JobCodeNormalizer
         var binType = NormalizeBinType(match.Groups[2].Value);
         var day = NormalizeDay(match.Groups[3].Value);
         var weekCycle = NormalizeWeekCycle(match.Groups[4].Value);
+
+        if (string.IsNullOrEmpty(day)) return null;
 
         return new NormalizedJobCode(route, binType, day, weekCycle);
     }
