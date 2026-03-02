@@ -4,15 +4,15 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 export interface BinCollection {
-  bin_type: string;
+  binType: string;
   color: string;
-  next_collection: string;
+  nextCollection: string;
 }
 
 export interface BinLookupResponse {
   address: string;
   collections: BinCollection[];
-  next_collection_color: string;
+  nextCollectionColor: string;
 }
 
 export interface UserAddress {
@@ -32,7 +32,7 @@ export class BinService {
   lookupBins(postcode: string, houseNumber?: string): Observable<BinLookupResponse> {
     return this.http.post<BinLookupResponse>(`${this.apiUrl}/bin-lookup`, {
       postcode,
-      house_number: houseNumber
+      houseNumber
     }).pipe(
       catchError(error => {
         console.error('Error fetching bin data:', error);
