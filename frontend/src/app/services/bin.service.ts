@@ -24,7 +24,7 @@ export interface UserAddress {
   providedIn: 'root'
 })
 export class BinService {
-  private apiUrl = 'https://app-isvwccpu.fly.dev/api';
+  private apiUrl = 'https://localhost:44390/api';
   private storageKey = 'belfast_bins_address';
 
   constructor(private http: HttpClient) {}

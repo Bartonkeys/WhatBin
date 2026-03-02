@@ -1,6 +1,6 @@
+using BelfastBinsApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using WhatBin.DataSeeder.Data;
 using WhatBin.DataSeeder.Parsers;
 
 var configuration = new ConfigurationBuilder()
@@ -64,7 +64,7 @@ foreach (var pdfFile in pdfFiles)
 
     try
     {
-        var schedules = BinSchedulePdfParser.ParsePdf(pdfFile).ToList();
+        var schedules = BinSchedulePdfParser.ParsePdfIntoStaging(pdfFile).ToList();
         Console.WriteLine($"  Parsed {schedules.Count:N0} records");
 
         if (schedules.Count == 0)
@@ -78,7 +78,7 @@ foreach (var pdfFile in pdfFiles)
         for (var i = 0; i < schedules.Count; i += batchSize)
         {
             var batch = schedules.Skip(i).Take(batchSize).ToList();
-            context.BinSchedules.AddRange(batch);
+            context.StagingBinSchedules.AddRange(batch);
             await context.SaveChangesAsync();
 
             // Detach tracked entities to free memory
@@ -95,13 +95,13 @@ foreach (var pdfFile in pdfFiles)
         totalRecords += schedules.Count;
 
         // Print sample of unique job codes found
-        var jobCodes = schedules
-            .Select(s => $"{s.Route} - {s.BinType} - {s.DayOfWeek} {s.WeekCycle}")
-            .Distinct()
-            .OrderBy(j => j)
-            .ToList();
+        //var jobCodes = schedules
+        //    .Select(s => $"{s.Route} - {s.BinType} - {s.DayOfWeek} {s.WeekCycle}")
+        //    .Distinct()
+        //    .OrderBy(j => j)
+        //    .ToList();
 
-        Console.WriteLine($"  Job codes found: {string.Join(", ", jobCodes)}");
+        //Console.WriteLine($"  Job codes found: {string.Join(", ", jobCodes)}");
     }
     catch (Exception ex)
     {

@@ -17,3 +17,11 @@ public class BinSchedule
     public required string PostcodeNormalized { get; set; }
     public required string FullAddress { get; set; }
 }
+
+public class StagingBinSchedule
+{
+    public int Id { get; set; }
+    public required string JobCode { get; set; }
+    public required string Service { get; set; }
+    public required string FullAddress { get; set; }
+}

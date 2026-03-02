@@ -3,12 +3,44 @@
   "WorkspaceRootPath": "C:\\Users\\graha\\source\\repos\\WhatBin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\services\\binscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\services\\binscraperservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\migrations\\20260302090952_stagingtable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\migrations\\20260302090952_stagingtable.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\data\\bindbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\data\\bindbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|c:\\users\\graha\\source\\repos\\whatbin\\whatbin.dataseeder\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|solutionrelative:whatbin.dataseeder\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|c:\\users\\graha\\source\\repos\\whatbin\\whatbin.dataseeder\\parsers\\binschedulepdfparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|solutionrelative:whatbin.dataseeder\\parsers\\binschedulepdfparser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\models\\binschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\models\\binschedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|c:\\users\\graha\\source\\repos\\whatbin\\whatbin.dataseeder\\whatbin.dataseeder.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|solutionrelative:whatbin.dataseeder\\whatbin.dataseeder.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|c:\\users\\graha\\source\\repos\\whatbin\\whatbin.dataseeder\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2207203C-EB54-2C45-CA63-D7E5665655E5}|WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj|solutionrelative:whatbin.dataseeder\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\controllers\\binlookupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\controllers\\binlookupcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|c:\\users\\graha\\source\\repos\\whatbin\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2155B38E-E33E-6678-7241-1800CA85F495}|backend\\BelfastBinsApi.csproj|solutionrelative:backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +50,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,33 +58,145 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "BinScraperService.cs",
-              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Services\\BinScraperService.cs",
-              "RelativeDocumentMoniker": "backend\\Services\\BinScraperService.cs",
-              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Services\\BinScraperService.cs",
-              "RelativeToolTip": "backend\\Services\\BinScraperService.cs",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAcwFcAAABVAAAAAAAAAA==",
+              "Title": "20260302090952_stagingTable.cs",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Migrations\\20260302090952_stagingTable.cs",
+              "RelativeDocumentMoniker": "backend\\Migrations\\20260302090952_stagingTable.cs",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Migrations\\20260302090952_stagingTable.cs",
+              "RelativeToolTip": "backend\\Migrations\\20260302090952_stagingTable.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T15:23:33.295Z",
+              "WhenOpened": "2026-03-02T09:09:55.287Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "BinSchedule.cs",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Models\\BinSchedule.cs",
+              "RelativeDocumentMoniker": "backend\\Models\\BinSchedule.cs",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Models\\BinSchedule.cs",
+              "RelativeToolTip": "backend\\Models\\BinSchedule.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T08:34:47.129Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "BinDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Data\\BinDbContext.cs",
+              "RelativeDocumentMoniker": "backend\\Data\\BinDbContext.cs",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Data\\BinDbContext.cs",
+              "RelativeToolTip": "backend\\Data\\BinDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-02T08:20:55.623Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BinSchedulePdfParser.cs",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\Parsers\\BinSchedulePdfParser.cs",
+              "RelativeDocumentMoniker": "WhatBin.DataSeeder\\Parsers\\BinSchedulePdfParser.cs",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\Parsers\\BinSchedulePdfParser.cs",
+              "RelativeToolTip": "WhatBin.DataSeeder\\Parsers\\BinSchedulePdfParser.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAcwC4AAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T17:50:15.177Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "WhatBin.DataSeeder.csproj",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj",
+              "RelativeDocumentMoniker": "WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj",
+              "RelativeToolTip": "WhatBin.DataSeeder\\WhatBin.DataSeeder.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-03-01T17:40:50.906Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\Program.cs",
+              "RelativeDocumentMoniker": "WhatBin.DataSeeder\\Program.cs",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\Program.cs",
+              "RelativeToolTip": "WhatBin.DataSeeder\\Program.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAgwGkAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T17:38:36.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\appsettings.json",
+              "RelativeDocumentMoniker": "WhatBin.DataSeeder\\appsettings.json",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\WhatBin.DataSeeder\\appsettings.json",
+              "RelativeToolTip": "WhatBin.DataSeeder\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-01T17:38:21.749Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\appsettings.json",
+              "RelativeDocumentMoniker": "backend\\appsettings.json",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\appsettings.json",
+              "RelativeToolTip": "backend\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-01T17:35:27.663Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "BinLookupController.cs",
               "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Controllers\\BinLookupController.cs",
               "RelativeDocumentMoniker": "backend\\Controllers\\BinLookupController.cs",
               "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Controllers\\BinLookupController.cs",
               "RelativeToolTip": "backend\\Controllers\\BinLookupController.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAB4AAAAMAAAAAAAAAA==",
+              "ViewState": "AgIAABIAAAAAAAAAAAAQwB4AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-26T15:22:42.286Z",
+              "WhenOpened": "2026-03-01T14:58:00.225Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "backend\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\graha\\source\\repos\\WhatBin\\backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "backend\\Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-01T14:32:50.673Z"
             }
           ]
         }
