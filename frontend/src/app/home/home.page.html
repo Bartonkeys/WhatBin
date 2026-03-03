@@ -99,6 +99,90 @@
           </div>
         </div>
       </div>
+
+      <!-- SMS Notification Subscription -->
+      <div class="notification-section">
+        <div class="notification-header">
+          <ion-icon name="notifications-outline"></ion-icon>
+          <h3>Get Reminders</h3>
+        </div>
+        <p class="notification-desc">Receive an SMS the evening before your bin collection day.</p>
+
+        <div *ngIf="!subscribed" class="notification-form">
+          <div class="phone-input-row">
+            <input
+              class="phone-input"
+              [(ngModel)]="phoneNumber"
+              placeholder="+44 7700 900000"
+              type="tel" />
+            <button class="subscribe-btn" (click)="subscribeSms()" [disabled]="subscribing">
+              {{ subscribing ? 'Subscribing...' : 'Subscribe' }}
+            </button>
+          </div>
+          <p class="notification-hint">UK mobile number. You can unsubscribe at any time.</p>
+          <div class="notification-error" *ngIf="subscribeError">{{ subscribeError }}</div>
+        </div>
+
+        <div *ngIf="subscribed" class="notification-success">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>{{ subscribeMessage }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat section -->
+  <div class="chat-section">
+    <div class="chat-container">
+      <div class="chat-header">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+        <div>
+          <h2>Ask WhatBin</h2>
+          <p>Ask questions about your bin collections in plain English</p>
+        </div>
+      </div>
+
+      <div class="chat-messages" #chatMessages>
+        <div *ngIf="chatMessages.children.length === 0 && messages.length === 0" class="chat-empty">
+          <p>Try asking:</p>
+          <div class="chat-suggestions">
+            <button class="suggestion-chip" (click)="sendSuggestion('When is my next black bin collection?')">
+              When is my next black bin?
+            </button>
+            <button class="suggestion-chip" (click)="sendSuggestion('What can I put in the blue bin?')">
+              What goes in the blue bin?
+            </button>
+            <button class="suggestion-chip" (click)="sendSuggestion('Which bins go out this week?')">
+              Which bins go out this week?
+            </button>
+          </div>
+        </div>
+
+        <div *ngFor="let msg of messages" class="chat-message" [ngClass]="msg.role">
+          <div class="message-bubble">
+            <p>{{ msg.content }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="chatLoading" class="chat-message assistant">
+          <div class="message-bubble typing">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-row">
+        <input
+          class="chat-input"
+          [(ngModel)]="chatInput"
+          placeholder="Ask about your bins..."
+          type="text"
+          (keyup.enter)="sendChat()"
+          [disabled]="chatLoading" />
+        <button class="chat-send-btn" (click)="sendChat()" [disabled]="chatLoading || !chatInput.trim()">
+          <ion-icon name="send-outline"></ion-icon>
+        </button>
+      </div>
     </div>
   </div>
 

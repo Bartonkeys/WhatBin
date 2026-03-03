@@ -1,6 +1,8 @@
 using BelfastBinsApi.Services;
+using BelfastBinsApi.Plugins;
 using BelfastBinsApi.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,34 @@ builder.Services.AddDbContext<BinDbContext>(options =>
 
 builder.Services.AddSingleton<CollectionScheduleService>();
 builder.Services.AddScoped<BinScraperService>();
+
+// Semantic Kernel setup
+var openAiApiKey = builder.Configuration["OpenAI:ApiKey"]
+    ?? Environment.GetEnvironmentVariable("OPENAI_API_KEY")
+    ?? "";
+var openAiModel = builder.Configuration["OpenAI:Model"] ?? "gpt-4o-mini";
+
+builder.Services.AddScoped<BinCollectionPlugin>();
+
+builder.Services.AddScoped<Kernel>(sp =>
+{
+    var kernelBuilder = Kernel.CreateBuilder();
+    kernelBuilder.AddOpenAIChatCompletion(openAiModel, openAiApiKey);
+
+    var kernel = kernelBuilder.Build();
+
+    // Import the plugin using the scoped instance
+    var plugin = sp.GetRequiredService<BinCollectionPlugin>();
+    kernel.ImportPluginFromObject(plugin, "BinCollection");
+
+    return kernel;
+});
+
+// SMS / Twilio
+builder.Services.AddSingleton<ISmsService, TwilioSmsService>();
+
+// Night-before notification background service
+builder.Services.AddHostedService<NotificationBackgroundService>();
 
 builder.Services.AddCors(options =>
 {
