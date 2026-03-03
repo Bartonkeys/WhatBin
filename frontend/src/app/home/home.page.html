@@ -143,7 +143,7 @@
       </div>
 
       <div class="chat-messages" #chatMessages>
-        <div *ngIf="chatMessages.children.length === 0 && messages.length === 0" class="chat-empty">
+        <div *ngIf="messages.length === 0 && !chatLoading" class="chat-empty">
           <p>Try asking:</p>
           <div class="chat-suggestions">
             <button class="suggestion-chip" (click)="sendSuggestion('When is my next black bin collection?')">
