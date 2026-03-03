@@ -11,6 +11,8 @@ public class BinDbContext : DbContext
 
     public DbSet<BinSchedule> BinSchedules { get; set; }
     public DbSet<StagingBinSchedule> StagingBinSchedules { get; set; }
+    public DbSet<SmsSubscription> SmsSubscriptions { get; set; }
+    public DbSet<NotificationLog> NotificationLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +29,22 @@ public class BinDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => e.JobCode);
+        });
+
+        modelBuilder.Entity<SmsSubscription>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.PhoneNumber, e.Postcode });
+            entity.HasIndex(e => e.IsActive);
+        });
+
+        modelBuilder.Entity<NotificationLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.SmsSubscriptionId, e.CollectionDate });
+            entity.HasOne(e => e.Subscription)
+                  .WithMany()
+                  .HasForeignKey(e => e.SmsSubscriptionId);
         });
     }
 }
