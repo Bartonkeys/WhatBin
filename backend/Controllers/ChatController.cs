@@ -149,10 +149,7 @@ Always mention the specific collection date when providing schedule information.
     [HttpDelete("chat/{sessionId}")]
     public IActionResult ClearSession(string sessionId)
     {
-        if (_sessions.TryRemove(sessionId, out var session))
-        {
-            session.Lock.Dispose();
-        }
+        _sessions.TryRemove(sessionId, out _);
         return Ok(new { message = "Session cleared" });
     }
 }

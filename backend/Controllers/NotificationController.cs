@@ -41,28 +41,31 @@ public class NotificationController : ControllerBase
                 return BadRequest(new { detail = "Invalid phone number format. Please use international format (e.g., +44 7700 900000)" });
             }
 
+            // Normalize postcode (strip spaces for consistent dedup)
+            var postcode = NormalizePostcode(request.Postcode);
+
             // Check for existing subscription
             var existing = await _dbContext.SmsSubscriptions
-                .FirstOrDefaultAsync(s => s.PhoneNumber == phoneNumber && s.Postcode == request.Postcode.Trim().ToUpper());
+                .FirstOrDefaultAsync(s => s.PhoneNumber == phoneNumber && s.Postcode == postcode);
 
             if (existing != null)
             {
                 if (existing.IsActive)
                 {
-                    return Ok(new { message = "You are already subscribed for this address", subscriptionId = existing.Id });
+                    return Ok(new { message = "You are already subscribed for this address", subscriptionId = existing.Id, smsEnabled = _smsService.IsConfigured });
                 }
 
                 // Reactivate
                 existing.IsActive = true;
                 existing.HouseNumber = request.HouseNumber;
                 await _dbContext.SaveChangesAsync();
-                return Ok(new { message = "Subscription reactivated", subscriptionId = existing.Id });
+                return Ok(new { message = "Subscription reactivated", subscriptionId = existing.Id, smsEnabled = _smsService.IsConfigured });
             }
 
             var subscription = new SmsSubscription
             {
                 PhoneNumber = phoneNumber,
-                Postcode = request.Postcode.Trim().ToUpper(),
+                Postcode = postcode,
                 HouseNumber = request.HouseNumber?.Trim()
             };
 
@@ -75,7 +78,7 @@ public class NotificationController : ControllerBase
             if (_smsService.IsConfigured)
             {
                 await _smsService.SendSmsAsync(phoneNumber,
-                    $"Welcome to WhatBin! You'll receive bin collection reminders the evening before your collection day for {request.Postcode.Trim().ToUpper()}. Reply STOP to unsubscribe.");
+                    $"Welcome to WhatBin! You'll receive bin collection reminders the evening before your collection day for {postcode}. Reply STOP to unsubscribe.");
             }
 
             return Ok(new
@@ -172,6 +175,8 @@ public class NotificationController : ControllerBase
             return StatusCode(500, new { detail = "Error checking subscription status" });
         }
     }
+
+    private static string NormalizePostcode(string postcode) => postcode.Replace(" ", "").Trim().ToUpper();
 
     private static string? NormalizePhoneNumber(string phone)
     {
